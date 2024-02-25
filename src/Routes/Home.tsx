@@ -18,6 +18,8 @@ const Loader = styled.div`
   align-items: center;
 `;
 
+
+
 const Banner = styled.div<{ bgPhoto: string }>`
   height: 100vh;
   display: flex;
