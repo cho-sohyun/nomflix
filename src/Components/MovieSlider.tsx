@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
@@ -9,6 +9,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import '../styles/slide.css';
+import Modal from './Modal';
 
 export interface MovieSliderProps {
   movies: IMovie[];
@@ -62,8 +63,7 @@ const infoVariants = {
 };
 
 const MovieSlider: React.FC<MovieSliderProps> = ({ title, movieCategory }) => {
-  const navigate = useNavigate();
-  const { movieId } = useParams();
+  const [selectedMovie, setSelectedMovie] = useState<IMovie | null>(null);
   const { data, isLoading } = useQuery<IGetMoviesResult>(['movies', movieCategory], () => getMovies(movieCategory));
 
   const settings = {
@@ -98,8 +98,12 @@ const MovieSlider: React.FC<MovieSliderProps> = ({ title, movieCategory }) => {
     ],
   };
 
-  const handleBoxClick = (movieId: number) => {
-    navigate(`/movies/${movieId}`);
+  const handleBoxClick = (movie: IMovie) => {
+    setSelectedMovie(movie);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedMovie(null);
   };
 
   return (
@@ -113,7 +117,7 @@ const MovieSlider: React.FC<MovieSliderProps> = ({ title, movieCategory }) => {
             whileHover="hover"
             initial="normal"
             variants={imgVariants}
-            onClick={() => handleBoxClick(movie.id)}
+            onClick={() => handleBoxClick(movie)}
             transition={{ type: 'tween' }}
             role="button"
           >
@@ -124,6 +128,7 @@ const MovieSlider: React.FC<MovieSliderProps> = ({ title, movieCategory }) => {
           </Slide>
         ))}
       </Slider>
+      {selectedMovie && <Modal movie={selectedMovie} onClose={handleCloseModal} />}
     </SliderContainer>
   );
 };
