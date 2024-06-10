@@ -1,8 +1,7 @@
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
 import { getMovies, IGetMoviesResult, IMovie } from '../api';
 import { makeImagePath } from '../utils';
-import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 export interface IBannerProps {
@@ -50,10 +49,10 @@ const BannerInfo = styled.div`
 `;
 
 function Banner() {
-  const { data: nowPlayingData, isLoading: isLoadingNowPlaying } = useQuery<IGetMoviesResult>(
-    ['movies', 'now_playing'],
-    () => getMovies('now_playing'),
-  );
+  const { data: nowPlayingData, isLoading: isLoadingNowPlaying } = useQuery<IGetMoviesResult>({
+    queryKey: ['movies', 'now_playing'],
+    queryFn: () => getMovies('now_playing'),
+  });
 
   if (isLoadingNowPlaying) {
     return <div>Loading...</div>;

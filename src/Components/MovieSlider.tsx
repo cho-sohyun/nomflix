@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { getMovies, IGetMoviesResult, IMovie } from '../api';
 import { makeImagePath } from '../utils';
-import { useNavigate, useParams } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -64,7 +63,10 @@ const infoVariants = {
 
 const MovieSlider: React.FC<MovieSliderProps> = ({ title, movieCategory }) => {
   const [selectedMovie, setSelectedMovie] = useState<IMovie | null>(null);
-  const { data, isLoading } = useQuery<IGetMoviesResult>(['movies', movieCategory], () => getMovies(movieCategory));
+  const { data, isLoading } = useQuery<IGetMoviesResult>({
+    queryKey: ['movies', movieCategory],
+    queryFn: () => getMovies(movieCategory),
+  });
 
   const settings = {
     dots: false,

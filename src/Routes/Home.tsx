@@ -1,6 +1,5 @@
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
 import { getMovies, IGetMoviesResult } from '../api';
 import { useNavigate, useParams } from 'react-router-dom';
 import 'slick-carousel/slick/slick.css';
@@ -27,19 +26,26 @@ const Slider = styled.section`
 function Home() {
   const navigate = useNavigate();
   const { movieId } = useParams();
-  const { data: nowPlayingData, isLoading: isLoadingNowPlaying } = useQuery<IGetMoviesResult>(
-    ['movies', 'now_playing'],
-    () => getMovies('now_playing'),
-  );
-  const { data: popularData, isLoading: isLoadingPopular } = useQuery<IGetMoviesResult>(['movies', 'popular'], () =>
-    getMovies('popular'),
-  );
-  const { data: topRatedData, isLoading: isLoadingTopRated } = useQuery<IGetMoviesResult>(['movies', 'top_rated'], () =>
-    getMovies('top_rated'),
-  );
-  const { data: upcomingData, isLoading: isUpComingTopRated } = useQuery<IGetMoviesResult>(['movies', 'upcoming'], () =>
-    getMovies('upcoming'),
-  );
+
+  const { data: nowPlayingData, isLoading: isLoadingNowPlaying } = useQuery<IGetMoviesResult>({
+    queryKey: ['movies', 'now_playing'],
+    queryFn: () => getMovies('now_playing'),
+  });
+
+  const { data: popularData, isLoading: isLoadingPopular } = useQuery<IGetMoviesResult>({
+    queryKey: ['movies', 'popular'],
+    queryFn: () => getMovies('popular'),
+  });
+
+  const { data: topRatedData, isLoading: isLoadingTopRated } = useQuery<IGetMoviesResult>({
+    queryKey: ['movies', 'top_rated'],
+    queryFn: () => getMovies('top_rated'),
+  });
+
+  const { data: upcomingData, isLoading: isUpComingTopRated } = useQuery<IGetMoviesResult>({
+    queryKey: ['movies', 'upcoming'],
+    queryFn: () => getMovies('upcoming'),
+  });
 
   const onBoxClicked = (movieId: number) => {
     navigate(`/movies/${movieId}`);
@@ -49,8 +55,6 @@ function Home() {
     return <Loader>Loading...</Loader>;
   }
 
-  // const onOverlayClick = () => navigate('/');
-  // const clickedMovie = movieId && data?.results.find((movie) => movie.id === +movieId);
   return (
     <Wrapper>
       <Banner />
